@@ -248,9 +248,9 @@ abstract class Stage
      *
      * @see https://docs.mongodb.com/manual/reference/operator/aggregation/out/
      */
-    public function out(string $collection): Stage\Out
+    public function out(string $collection, ?string $database): Stage\Out
     {
-        return $this->builder->out($collection);
+        return $this->builder->out($collection, $database);
     }
 
     /**

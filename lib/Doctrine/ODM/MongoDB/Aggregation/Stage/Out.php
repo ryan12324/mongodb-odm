@@ -19,28 +19,34 @@ class Out extends Stage
     /** @var string */
     private $collection;
 
-    public function __construct(Builder $builder, string $collection, DocumentManager $documentManager)
+    /** @var string */
+    private $database;
+
+    public function __construct(Builder $builder, string $collection, string $database, DocumentManager $documentManager)
     {
         parent::__construct($builder);
-
+        $this->database = $database;
         $this->dm = $documentManager;
-        $this->out($collection);
+        $this->out($collection, $database);
     }
 
     public function getExpression(): array
     {
         return [
-            '$out' => $this->collection,
+            '$out' => [
+                'db' => $this->database,
+                'coll' => $this->collection
+            ]
         ];
     }
 
-    public function out(string $collection): Stage\Out
+    public function out(string $collection, string $database): Stage\Out
     {
         try {
+            $this->dm->getConfiguration()->setDefaultDB($database);
             $class = $this->dm->getClassMetadata($collection);
         } catch (BaseMappingException $e) {
             $this->collection = $collection;
-
             return $this;
         }
 

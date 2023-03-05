@@ -434,9 +434,12 @@ class Builder
      *
      * @see https://docs.mongodb.com/manual/reference/operator/aggregation/out/
      */
-    public function out(string $from): Stage\Out
+    public function out(string $from, ?string $database): Stage\Out
     {
-        $stage = new Stage\Out($this, $from, $this->dm);
+        if($database === null) {
+            $database = $this->dm->getDocumentDatabase($this->class->name)->getDatabaseName();
+        }
+        $stage = new Stage\Out($this, $from, $database, $this->dm);
         $this->addStage($stage);
 
         return $stage;
