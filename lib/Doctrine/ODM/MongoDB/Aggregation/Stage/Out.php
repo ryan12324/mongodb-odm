@@ -40,10 +40,9 @@ class Out extends Stage
         ];
     }
 
-    public function out(string $collection, string $database): Stage\Out
+    public function out(string $collection, ?string $database): Stage\Out
     {
         try {
-            $this->dm->getConfiguration()->setDefaultDB($database);
             $class = $this->dm->getClassMetadata($collection);
         } catch (BaseMappingException $e) {
             $this->collection = $collection;
@@ -62,5 +61,6 @@ class Out extends Stage
         }
 
         $this->collection = $classMetadata->getCollection();
+        $this->database = $classMetadata->getDatabase();
     }
 }
